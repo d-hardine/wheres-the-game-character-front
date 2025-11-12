@@ -4,9 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import '../index.css'
 
-function BasicExample() {
+function NavigationBar() {
   return (
-    <Navbar expand="lg" className="bg-primary-subtle" data-bs-theme="dark" bg="myColor">
+    <Navbar expand="lg" className="navbar-custom" data-bs-theme="dark">
       <Container>
         <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -25,7 +25,6 @@ function BasicExample() {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown>
-            <div className='text-light test'>test</div>
           </Nav>
         </Navbar.Collapse>
       </Container>
@@ -33,4 +32,4 @@ function BasicExample() {
   );
 }
 
-export default BasicExample;
+export default NavigationBar;

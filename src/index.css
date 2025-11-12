@@ -1,9 +1,15 @@
 /* https://colorhunt.co/palette/37353e44444e715a5ad3dad9 */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
 body {
   background-color: #37353E;
 }
 
-.test {
-  background-color: #715A5A;
+.navbar-custom {
+    background-color: #715A5A;
+    color: white;
+}
+
+.custom-text {
+  font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
