@@ -1,15 +1,23 @@
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import BasicExample from './components/Navbar'
+import './index.css'
 
 function App() {
   return (
+    <>
+    <BasicExample />
     <Container>
       <Row>
-        <Col className='text-white'>Hello</Col>
-        <Col className='text-white'>World</Col>
+        <Col>
+           <span className='text-white'>Hello </span>
+           <span className='text-light'>World</span>
+           <div className='text-white'>test</div>
+        </Col>
       </Row>
     </Container>
+    </>
   )
 }
 
