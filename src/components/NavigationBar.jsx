@@ -2,16 +2,17 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
 import '../index.css'
 
 function NavigationBar() {
   return (
-    <Navbar expand="lg" className="navbar-custom" data-bs-theme="dark">
+    <Navbar expand="lg" className="navbar-custom" data-bs-theme="dark"> {/* expand lg for responsive purpose */}
       <Container>
-        <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/"  className='custom-text'>Where Are They?</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          <Nav className="me-auto"> {/* me-auto => margin end: auto */}
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="#link">Link</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">

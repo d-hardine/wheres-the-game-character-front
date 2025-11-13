@@ -1,7 +1,8 @@
 import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
-import NavigationBar from './components/Navbar'
+import NavigationBar from './components/NavigationBar'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import Home from './pages/Home.jsx'
+import Game from './pages/Game.jsx'
 import './index.css'
 
 function App() {
@@ -9,13 +10,11 @@ function App() {
     <>
     <NavigationBar />
     <Container>
-      <Row>
-        <Col>
-           <span className='text-white'>Hello </span>
-           <span className='text-light'>World</span>
-           <div className='custom-text text-white'>test</div>
-        </Col>
-      </Row>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/game/:consoleName' element={<Game />} />
+        <Route path='*' element={<Navigate to="/" />} />
+      </Routes>
     </Container>
     </>
   )

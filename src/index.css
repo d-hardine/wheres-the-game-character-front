@@ -13,3 +13,21 @@ body {
 .custom-text {
   font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.grayscale-image-effect {
+  filter: grayscale(100%);
+  transition: 0.3s;
+}
+
+.grayscale-image-effect:hover {
+  filter: grayscale(0%);
+  transition: 0.3s;
+}
+
+.play-btn {
+  display: none;
+}
+
+.grayscale-image-effect + .play-btn {
+  display: block;
+}
