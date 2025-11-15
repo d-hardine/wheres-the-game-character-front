@@ -24,10 +24,6 @@ body {
   transition: 0.3s;
 }
 
-.play-btn {
-  display: none;
-}
-
-.grayscale-image-effect + .play-btn {
-  display: block;
+.grayscale-thumbnail {
+  filter: grayscale(100%);
 }
