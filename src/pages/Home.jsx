@@ -46,7 +46,7 @@ function Home() {
             <Card.Body>
               <Card.Text className='text-center custom-text'>Nintendo Wii</Card.Text>
             </Card.Body>
-            <Link to="/game/ps1"><Card.Img variant="bottom" src={wiiImage} className='grayscale-image-effect' /></Link>
+            <Link to="/game/wii"><Card.Img variant="bottom" src={wiiImage} className='grayscale-image-effect' /></Link>
           </Card>
         </Col>
       </Row>

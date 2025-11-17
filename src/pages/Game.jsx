@@ -93,6 +93,8 @@ function Game() {
     const x = ((e.clientX - rect.left) / rect.width) * 1000;
     const y = ((e.clientY - rect.top) / rect.height) * 1000;
 
+    console.log(`x: ${x}, y: ${y}`)
+
     try {
       const response = await axios.post('http://localhost:3000/api/verify', {
         consoleName: pageParams.consoleName, characterName: selectedCharacter, x, y
@@ -101,26 +103,26 @@ function Game() {
 
       if (data.found && !foundCharacters.includes(data.characterName)) {
         setFoundCharacters([...foundCharacters, data.characterName]);
-          alert(`You found ${data.characterName}!`);
+        //alert(`You found ${data.characterName}!`);
 
-          const nextCharacterNames = characterNames.map(character => {
-            if(character.name === data.characterName)
-              return {...character, found: true}
-            else return character
-          })
-          setCharacterNames(nextCharacterNames)
+        const nextCharacterNames = characterNames.map(character => {
+          if(character.name === data.characterName)
+            return {...character, found: true}
+          else return character
+        })
+        setCharacterNames(nextCharacterNames)
 
-          if ([...foundCharacters, data.characterName].length === 4) { // Assuming 4 characters in each level
-            setIsGameOver(true);
-            //alert(`You found all characters in ${timer} seconds!`);
-            alert(`You found all characters!`)
-            // Prompt for username and submit high score
-          }
-        } else if (data.found) {
-            alert(`You already found ${data.characterName}!`);
-        } else {
-            setShowIncorrectModal(true)
+        if ([...foundCharacters, data.characterName].length === 4) { // Assuming 4 characters in each level
+          setIsGameOver(true);
+          //alert(`You found all characters in ${timer} seconds!`);
+          alert(`You found all characters!`)
+          // Prompt for username and submit high score
         }
+      } else if (data.found) {
+          alert(`You already found ${data.characterName}!`);
+      } else {
+          setShowIncorrectModal(true)
+      }
     } catch(err) {
       console.error(err)
     }
@@ -153,7 +155,7 @@ function Game() {
         <div className="image-container" onClick={handleDropDownToggle}>
           {showDropDown && (
           <Dropdown style={{position: 'absolute', top: position.y, left: position.x}}>
-            <Dropdown.Toggle variant="success" id="dropdown-basic">What character is this?</Dropdown.Toggle>
+            <Dropdown.Toggle variant="success" id="dropdown-basic">Who is this character?</Dropdown.Toggle>
             <Dropdown.Item className="p-2" style={{backgroundColor: '#37353ecb'}} onClick={(e) => handleImageClick(e, characterNames[0].name)}>{characterNames[0].name}</Dropdown.Item>
             <Dropdown.Item className="p-2" style={{backgroundColor: '#37353ecb'}} onClick={(e) => handleImageClick(e, characterNames[1].name)}>{characterNames[1].name}</Dropdown.Item>
             <Dropdown.Item className="p-2" style={{backgroundColor: '#37353ecb'}} onClick={(e) => handleImageClick(e, characterNames[2].name)}>{characterNames[2].name}</Dropdown.Item>
