@@ -75,14 +75,28 @@ function Game() {
     fetchCharacterNames()
   }, [])
 
+  //timer stuff
   useEffect(() => {
     if (!isGameOver) {
       const interval = setInterval(() => {
-        setTimer(t => t + 1);
-      }, 1000);
+        setTimer(t => t + 10);
+      }, 10); //update every milliseconds
       return () => clearInterval(interval);
     }
   }, [isGameOver]);
+
+  const formatTime = (milliseconds) => {
+    const totalSeconds = Math.floor(milliseconds / 1000)
+    const minutes = Math.floor(totalSeconds/ 60)
+    const seconds = totalSeconds % 60
+    //const centiseconds = Math.floor((milliseconds % 1000) / 10)
+
+    return (
+      `${minutes.toString().padStart(2, '0')}:` +
+      `${seconds.toString().padStart(2, '0')}` //+
+      //`${centiseconds.toString().padStart(2, '0')}`
+    )
+  }
 
   const handleImageClick = async (e, selectedCharacter) => {
     e.preventDefault()
@@ -114,8 +128,7 @@ function Game() {
 
         if ([...foundCharacters, data.characterName].length === 4) { // Assuming 4 characters in each level
           setIsGameOver(true);
-          //alert(`You found all characters in ${timer} seconds!`);
-          alert(`You found all characters!`)
+          alert(`You found all characters in ${formatTime(timer)}!`);
           // Prompt for username and submit high score
         }
       } else if (data.found) {
@@ -137,16 +150,15 @@ function Game() {
   return (
     <>      
       <Row className="justify-content-center sticky-top" style={{backgroundColor: '#37353ecb'}}>
-        <div>Can you find them?</div>
-        <div>time: {timer} seconds</div>
         {characterNames && (
           characterNames.map((characterName, i) => (
-            <Col key={characterName.id} className="m-auto">
+            <Col key={characterName.id} className="m-auto p-3">
               <Image className={`d-block mx-auto ${characterName.found === true && 'grayscale-thumbnail'}`} src={characterImages[i]} roundedCircle fluid />
-              <div className="text-center p-2 custom-text"><b>{characterName.name}</b></div>
+              <div className="text-center custom-text"><b>{characterName.name}</b></div>
             </Col>
           ))
         )}
+        <h1 className="text-center custom-text">{formatTime(timer)}</h1>
       </Row>
       <Modal show={showIncorrectModal} onHide={() => setShowIncorrectModal(false)}>
         <Modal.Header closeButton>Wrong character/location. Try again!</Modal.Header>
