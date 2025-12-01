@@ -10,6 +10,17 @@ function NavigationBar() {
     <Navbar expand="lg" className="navbar-custom" data-bs-theme="dark"> {/* expand lg for responsive purpose */}
       <Container>
         <Navbar.Brand as={Link} to="/"  className='custom-text'>Where Are They?</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <NavDropdown className='custom-text' style={{zIndex: '999'}} title="Leaderboard" id="basic-nav-dropdown">
+              <NavDropdown.Item href="/leaderboards/snes">SNES</NavDropdown.Item>
+              <NavDropdown.Item href="/leaderboards/ps1">PS1</NavDropdown.Item>
+              <NavDropdown.Item href="/leaderboards/ps2">PS2</NavDropdown.Item>
+              <NavDropdown.Item href="/leaderboards/wii">Wii</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
       </Container>
     </Navbar>
   );

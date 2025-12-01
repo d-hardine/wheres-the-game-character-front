@@ -5,7 +5,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { useParams } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import { useParams, useNavigate } from "react-router-dom";
 import '../index.css'
 
 function Game() {
@@ -15,8 +16,12 @@ function Game() {
   const [characterImages, setCharacterImages] = useState([])
   const [timer, setTimer] = useState(0)
   const [isGameOver, setIsGameOver] = useState(false)
+  const [isNewHighScore, setIsNewHighScore] = useState(false)
+  const [newHighScoreName, setNewHighScoreName] = useState('')
   const imageRef = useRef(null)
+  const slowestRef = useRef(null)
   const pageParams = useParams()
+  const navigate = useNavigate()
 
   //dynamic left click dropdown
   const [position, setPosition] = useState({x: 0, y: 0})
@@ -24,6 +29,9 @@ function Game() {
 
   //incorrect character/position modal
   const [showIncorrectModal, setShowIncorrectModal] = useState(false)
+
+  //game over modal
+  const [gameOverModal, setGameOverModal] = useState(false)
 
   useEffect(() => {
     const fetchImages = async () => {
@@ -55,7 +63,7 @@ function Game() {
           URL.createObjectURL(response3.data),
           URL.createObjectURL(response4.data),
         ]
-        setCharacterImages(imagesBlob) //coba nggawe map ae
+        setCharacterImages(imagesBlob)
       } catch(err) {
         console.error('Error fetch character thumbnail: ', err)
       }
@@ -71,8 +79,18 @@ function Game() {
       }
     }
 
+    const fetchSlowest = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/slowest/${pageParams.consoleName}`)
+        slowestRef.current = response.data
+      } catch (err) {
+        console.error('Error fetching the slowest:', err)
+      }
+    }
+
     fetchImages()
     fetchCharacterNames()
+    fetchSlowest()
   }, [])
 
   //timer stuff
@@ -89,12 +107,12 @@ function Game() {
     const totalSeconds = Math.floor(milliseconds / 1000)
     const minutes = Math.floor(totalSeconds/ 60)
     const seconds = totalSeconds % 60
-    //const centiseconds = Math.floor((milliseconds % 1000) / 10)
+    const centiseconds = Math.floor((milliseconds % 1000) / 10)
 
     return (
       `${minutes.toString().padStart(2, '0')}:` +
-      `${seconds.toString().padStart(2, '0')}` //+
-      //`${centiseconds.toString().padStart(2, '0')}`
+      `${seconds.toString().padStart(2, '0')}:` +
+      `${centiseconds.toString().padStart(2, '0')}`
     )
   }
 
@@ -119,6 +137,7 @@ function Game() {
         setFoundCharacters([...foundCharacters, data.characterName]);
         //alert(`You found ${data.characterName}!`);
 
+        //character found
         const nextCharacterNames = characterNames.map(character => {
           if(character.name === data.characterName)
             return {...character, found: true}
@@ -126,10 +145,14 @@ function Game() {
         })
         setCharacterNames(nextCharacterNames)
 
+        //all characters found
         if ([...foundCharacters, data.characterName].length === 4) { // Assuming 4 characters in each level
-          setIsGameOver(true);
-          alert(`You found all characters in ${formatTime(timer)}!`);
+          setIsGameOver(true)
+          setGameOverModal(true)
           // Prompt for username and submit high score
+          if(timer < slowestRef.current[0].time) {
+            setIsNewHighScore(true)
+          }
         }
       } else if (data.found) {
           alert(`You already found ${data.characterName}!`);
@@ -147,9 +170,21 @@ function Game() {
     setShow(!showDropDown)
   }
 
+  const handleNewHighScore = async () => {
+    await axios.put(`http://localhost:3000/api/leaderboards/${pageParams.consoleName}`, //update the leaderboard
+      {
+        name: newHighScoreName,
+        time: timer,
+        slowestId: slowestRef.current[0].id
+      }
+    )
+    setGameOverModal(false)
+    navigate(`/leaderboards/${pageParams.consoleName}`)
+  }
+
   return (
-    <>      
-      <Row className="justify-content-center sticky-top" style={{backgroundColor: '#37353ecb'}}>
+    <>
+      <Row className="justify-content-center sticky-top" style={{backgroundColor: '#37353ecb', zIndex: '1'}}>
         {characterNames && (
           characterNames.map((characterName, i) => (
             <Col key={characterName.id} className="m-auto p-3">
@@ -158,10 +193,26 @@ function Game() {
             </Col>
           ))
         )}
-        <h1 className="text-center custom-text">{formatTime(timer)}</h1>
+        <h2 className="custom-text">Time: {formatTime(timer)}</h2>
       </Row>
-      <Modal show={showIncorrectModal} onHide={() => setShowIncorrectModal(false)}>
+      <Modal show={showIncorrectModal} onHide={() => setShowIncorrectModal(false)} centered>
         <Modal.Header closeButton>Wrong character/location. Try again!</Modal.Header>
+      </Modal>
+      <Modal show={gameOverModal} onHide={() => setGameOverModal(false)} centered backdrop="static">
+        {isNewHighScore ? (
+          <>
+            <Modal.Body className="text-center">
+              <p>You found all characters in {formatTime(timer)}!</p>
+              <h3>New High Score!</h3>
+              <input type="text" placeholder="input your name" onChange={(e) => setNewHighScoreName(e.target.value)}/>
+            </Modal.Body>
+            <Modal.Footer className="justify-content-center">
+              <Button variant="primary" onClick={handleNewHighScore}>Submit</Button>
+            </Modal.Footer>
+          </>
+        ) : (
+          <Modal.Body className="text-center">You found all characters in {formatTime(timer)}!</Modal.Body>
+        )}
       </Modal>
       {consoleImageUrl && 
         <div className="image-container" onClick={handleDropDownToggle}>
