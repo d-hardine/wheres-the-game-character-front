@@ -122,6 +122,8 @@ function Game() {
 
     const image = imageRef.current
     const rect = image.getBoundingClientRect()
+    // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+    // https://stackoverflow.com/questions/6073505/what-is-the-difference-between-screenx-y-clientx-y-and-pagex-y
     const x = ((e.clientX - rect.left) / rect.width) * 1000;
     const y = ((e.clientY - rect.top) / rect.height) * 1000;
 
@@ -129,13 +131,16 @@ function Game() {
 
     try {
       const response = await axios.post('http://localhost:3000/api/verify', {
-        consoleName: pageParams.consoleName, characterName: selectedCharacter, x, y
+        consoleName: pageParams.consoleName,
+        characterName: selectedCharacter, 
+        x, 
+        y,
+        screenWidth: window.innerWidth
       })
       const data = response.data
 
       if (data.found && !foundCharacters.includes(data.characterName)) {
         setFoundCharacters([...foundCharacters, data.characterName]);
-        //alert(`You found ${data.characterName}!`);
 
         //character found
         const nextCharacterNames = characterNames.map(character => {
@@ -171,15 +176,19 @@ function Game() {
   }
 
   const handleNewHighScore = async () => {
-    await axios.put(`http://localhost:3000/api/leaderboards/${pageParams.consoleName}`, //update the leaderboard
-      {
-        name: newHighScoreName,
-        time: timer,
-        slowestId: slowestRef.current[0].id
-      }
-    )
-    setGameOverModal(false)
-    navigate(`/leaderboards/${pageParams.consoleName}`)
+    if(newHighScoreName) {
+      await axios.put(`http://localhost:3000/api/leaderboards/${pageParams.consoleName}`, //update the leaderboard
+        {
+          name: newHighScoreName,
+          time: timer,
+          slowestId: slowestRef.current[0].id
+        }
+      )
+      setGameOverModal(false)
+      navigate(`/leaderboards/${pageParams.consoleName}`)
+    } else {
+      alert('please type a name.')
+    }
   }
 
   return (
