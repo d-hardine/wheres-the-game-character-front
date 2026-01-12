@@ -14,10 +14,10 @@ function NavigationBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <NavDropdown className='custom-text' style={{zIndex: '999'}} title="Leaderboard" id="basic-nav-dropdown">
-              <NavDropdown.Item href="/leaderboards/snes">SNES</NavDropdown.Item>
-              <NavDropdown.Item href="/leaderboards/ps1">PS1</NavDropdown.Item>
-              <NavDropdown.Item href="/leaderboards/ps2">PS2</NavDropdown.Item>
-              <NavDropdown.Item href="/leaderboards/wii">Wii</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/leaderboards/snes">SNES</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/leaderboards/ps1">PS1</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/leaderboards/ps2">PS2</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/leaderboards/wii">Wii</NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
